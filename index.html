@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pocket Control</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+</head>
+<body>
+    <div id="app">
+
+        <!-- ========== PANTALLA DE LOGIN ========== -->
+        <div id="view-auth" class="view active">
+            <div class="auth-container">
+                <div class="auth-logo">
+                    <div class="logo-icon">💰</div>
+                    <h1>Pocket Control</h1>
+                    <p class="auth-subtitle">Tu control de gastos inteligente</p>
+                </div>
+
+                <div id="auth-form" class="auth-form">
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" data-tab="login">Iniciar sesión</button>
+                        <button class="auth-tab" data-tab="register">Registrarse</button>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Correo electrónico</label>
+                        <input type="email" id="auth-email" placeholder="tu@correo.com" autocomplete="email">
+                    </div>
+                    <div class="input-group">
+                        <label>Contraseña</label>
+                        <input type="password" id="auth-password" placeholder="••••••••" autocomplete="current-password">
+                    </div>
+
+                    <button id="auth-submit" class="btn-primary">Iniciar sesión</button>
+                    <p id="auth-error" class="error-msg"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== APP PRINCIPAL ========== -->
+        <div id="app-main" style="display:none;">
+
+            <!-- Alertas de presupuesto -->
+            <div id="budget-alert" class="budget-alert" style="display:none;">
+                <span id="budget-alert-icon">⚠️</span>
+                <span id="budget-alert-text"></span>
+                <button onclick="this.parentElement.style.display='none'" class="alert-close">✕</button>
+            </div>
+
+            <!-- ===== VISTA HOME ===== -->
+            <div id="view-home" class="view active">
+                <div class="view-scroll">
+                    <header class="home-header">
+                        <div>
+                            <p class="greeting" id="greeting"></p>
+                            <p class="greeting-sub">Aquí va tu resumen del mes</p>
+                        </div>
+                        <button class="btn-icon" id="btn-logout" title="Cerrar sesión">🚪</button>
+                    </header>
+
+                    <div class="balance-card">
+                        <div class="balance-label">Gastado este mes</div>
+                        <div class="balance-amount" id="home-spent">$0</div>
+                        <div class="budget-bar-container">
+                            <div class="budget-bar" id="home-budget-bar"></div>
+                        </div>
+                        <div class="balance-row">
+                            <span class="balance-budget">Presupuesto: <span id="home-budget">$500.000</span></span>
+                            <span class="balance-remaining" id="home-remaining">Disponible: $500.000</span>
+                        </div>
+                    </div>
+
+                    <div class="section-header">
+                        <h3>Últimos gastos</h3>
+                    </div>
+                    <div id="home-recent" class="expense-list">
+                        <div class="empty-state">Aún no tienes gastos registrados</div>
+                    </div>
+                </div>
+
+                <div class="expense-input-bar">
+                    <input type="text" id="expense-input" placeholder='Ej: "café 3500" o "uber 8000"' autocomplete="off">
+                    <button id="expense-submit" class="btn-send">➤</button>
+                </div>
+            </div>
+
+            <!-- ===== VISTA ESTADÍSTICAS ===== -->
+            <div id="view-stats" class="view">
+                <div class="view-scroll">
+                    <header class="section-title">
+                        <h2>📊 Estadísticas</h2>
+                    </header>
+
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <span class="metric-label">Total mes</span>
+                            <span class="metric-value" id="stat-total">$0</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Mes anterior</span>
+                            <span class="metric-value" id="stat-prev">$0</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Transacciones</span>
+                            <span class="metric-value" id="stat-count">0</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Promedio/día</span>
+                            <span class="metric-value" id="stat-avg">$0</span>
+                        </div>
+                    </div>
+
+                    <div class="section-header">
+                        <h3>Gastos por categoría</h3>
+                    </div>
+                    <div id="stats-bars" class="category-bars">
+                        <div class="empty-state">Sin datos aún</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== VISTA HISTORIAL ===== -->
+            <div id="view-history" class="view">
+                <div class="view-scroll">
+                    <header class="section-title">
+                        <h2>📋 Historial</h2>
+                    </header>
+
+                    <div class="filter-bar">
+                        <select id="history-filter">
+                            <option value="Todas">Todas las categorías</option>
+                            <option value="Transporte">🚌 Transporte</option>
+                            <option value="Comida">🍔 Comida</option>
+                            <option value="Mercado">🛒 Mercado</option>
+                            <option value="Entretenimiento">🎮 Entretenimiento</option>
+                            <option value="Educación">📚 Educación</option>
+                            <option value="Salud">💊 Salud</option>
+                            <option value="Otro">📦 Otro</option>
+                        </select>
+                    </div>
+
+                    <div id="history-list" class="expense-list">
+                        <div class="empty-state">No hay gastos este mes</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== VISTA INVERSIONES ===== -->
+            <div id="view-invest" class="view">
+                <div class="view-scroll">
+                    <header class="section-title">
+                        <h2>📈 Inversiones</h2>
+                        <p class="greeting-sub">Recomendaciones basadas en tu ahorro disponible</p>
+                    </header>
+
+                    <div class="invest-profile-tabs">
+                        <button class="invest-profile-tab active" data-profile="leve" onclick="switchProfile('leve')">🌱 Perfil leve</button>
+                        <button class="invest-profile-tab" data-profile="moderado" onclick="switchProfile('moderado')">📊 Perfil moderado</button>
+                    </div>
+
+                    <div id="profile-leve" class="invest-profile-content active">
+                        <div class="invest-risk-badge low">🌱 Bajo riesgo — Ideal para empezar a invertir con seguridad</div>
+                        <div class="invest-option-card">
+                            <div class="invest-option-icon">🏦</div>
+                            <div class="invest-option-info">
+                                <div class="invest-option-name">CDT Bancolombia</div>
+                                <div class="invest-option-desc">Certificado de Depósito a Término</div>
+                                <div class="invest-option-tags">
+                                    <span class="tag">📊 7–9% E.A.</span>
+                                    <span class="tag safe">🛡️ Riesgo Bajo</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="invest-option-card">
+                            <div class="invest-option-icon">📋</div>
+                            <div class="invest-option-info">
+                                <div class="invest-option-name">Fondo Fiduciaria Bogotá</div>
+                                <div class="invest-option-desc">Fondo de renta fija diversificado</div>
+                                <div class="invest-option-tags">
+                                    <span class="tag">📊 7.5–8.5% E.A.</span>
+                                    <span class="tag safe">🛡️ Riesgo Bajo</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="profile-moderado" class="invest-profile-content">
+                        <div class="invest-risk-badge medium">⚡ Riesgo moderado — Mayor potencial de retorno, mayor volatilidad</div>
+                        <div class="invest-option-card">
+                            <div class="invest-option-icon">🇺🇸</div>
+                            <div class="invest-option-info">
+                                <div class="invest-option-name">ETF S&P 500 (iShares)</div>
+                                <div class="invest-option-desc">Exposición a las 500 mayores empresas de EE.UU.</div>
+                                <div class="invest-option-tags">
+                                    <span class="tag">📊 11–15% anual histórico</span>
+                                    <span class="tag medium">⚠️ Riesgo Moderado</span>
+                                </div>
+                                <div class="invest-option-note">⚠️ Sujeto a volatilidad cambiaria y de mercado</div>
+                            </div>
+                        </div>
+                        <div class="invest-option-card">
+                            <div class="invest-option-icon">🇨🇴</div>
+                            <div class="invest-option-info">
+                                <div class="invest-option-name">Fondo de Acciones Colombia</div>
+                                <div class="invest-option-desc">Acciones de empresas colombianas listadas en BVC</div>
+                                <div class="invest-option-tags">
+                                    <span class="tag">📊 10–14% E.A.</span>
+                                    <span class="tag medium">⚠️ Riesgo Moderado</span>
+                                </div>
+                                <div class="invest-option-note">⚠️ Rendimientos pasados no garantizan resultados futuros</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="invest-ai-card">
+                        <div class="invest-ai-header">
+                            <span>🤖</span>
+                            <span class="invest-ai-title">Recomendación IA</span>
+                        </div>
+                        <div id="invest-ai-text">Cargando recomendación...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== BARRA DE NAVEGACIÓN INFERIOR ===== -->
+            <nav class="tab-bar">
+                <button class="tab active" data-view="home">
+                    <span class="tab-icon">🏠</span>
+                    <span class="tab-label">Inicio</span>
+                </button>
+                <button class="tab" data-view="stats">
+                    <span class="tab-icon">📊</span>
+                    <span class="tab-label">Estadísticas</span>
+                </button>
+                <button class="tab" data-view="history">
+                    <span class="tab-icon">📋</span>
+                    <span class="tab-label">Historial</span>
+                </button>
+                <button class="tab" data-view="invest">
+                    <span class="tab-icon">📈</span>
+                    <span class="tab-label">Inversiones</span>
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
