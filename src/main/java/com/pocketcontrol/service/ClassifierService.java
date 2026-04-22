@@ -31,8 +31,8 @@ public class ClassifierService {
             "flota", "terminal", "pasaje", "tiquete", "rappi moto", "picap"
         ));
 
-        // Comida
-        KEYWORD_MAP.put("Comida", Arrays.asList(
+        // Alimentación
+        KEYWORD_MAP.put("Alimentación", Arrays.asList(
             "almuerzo", "desayuno", "cena", "comida", "merienda", "onces",
             "café", "cafe", "tinto", "cappuccino", "latte", "aromática", "aromatica",
             "restaurante", "corrientazo", "bandeja", "ajiaco", "sancocho", "arepa",
@@ -99,7 +99,7 @@ public class ClassifierService {
 
         // Iconos
         CATEGORY_ICONS.put("Transporte", "🚌");
-        CATEGORY_ICONS.put("Comida", "🍔");
+        CATEGORY_ICONS.put("Alimentación", "🍔");
         CATEGORY_ICONS.put("Mercado", "🛒");
         CATEGORY_ICONS.put("Entretenimiento", "🎮");
         CATEGORY_ICONS.put("Educación", "📚");

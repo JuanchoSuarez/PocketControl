@@ -205,6 +205,8 @@ function switchView(view) {
     if (view === 'stats') loadStats();
     if (view === 'history') loadHistory();
     if (view === 'invest') loadInvestments();
+    if (view === 'budgets') loadBudgets();
+
 }
 
 function initNavigation() {
@@ -213,6 +215,8 @@ function initNavigation() {
     });
 
     document.getElementById('btn-logout').addEventListener('click', logout);
+
+    document.getElementById('btn-categories').addEventListener('click', () => switchView('budgets'));
 }
 
 // ===== HOME =====
@@ -445,6 +449,73 @@ async function loadInvestments() {
             ? `Con $${Math.round(ahorro).toLocaleString('es-CO')} podrías abrir un CDT o invertir en un fondo de renta fija.<br>Incluso pequeñas cantidades generan hábitos financieros sólidos.`
             : 'Intenta reducir gastos este mes para tener más disponible para invertir.'}`;
     }
+}
+
+// ===== CATEGORÍAS Y PRESUPUESTOS =====
+
+const CATEGORIES = [
+    { name: 'Total', icon: '💰' },
+    { name: 'Transporte', icon: '🚌' },
+    { name: 'Comida', icon: '🍔' },
+    { name: 'Mercado', icon: '🛒' },
+    { name: 'Entretenimiento', icon: '🎮' },
+    { name: 'Educación', icon: '📚' },
+    { name: 'Salud', icon: '💊' },
+    { name: 'Otro', icon: '📦' }
+];
+
+async function loadBudgets() {
+    const data = await apiFetch('/budgets');
+    if (!data) return;
+
+    const container = document.getElementById('budget-list');
+    if (!container) return;
+
+    const budgetMap = {};
+    data.forEach(b => { budgetMap[b.category] = b.amount; });
+
+    container.innerHTML = CATEGORIES.map(cat => `
+        <div class="budget-item">
+            <div class="budget-item-left">
+                <span class="budget-item-icon">${cat.icon}</span>
+                <span class="budget-item-name">${cat.name}</span>
+            </div>
+            <div class="budget-item-right">
+                <input 
+                    type="number" 
+                    class="budget-input" 
+                    id="budget-${cat.name}"
+                    value="${budgetMap[cat.name] || ''}" 
+                    placeholder="Sin límite"
+                >
+                <button class="btn-save-budget" onclick="saveBudget('${cat.name}')">✓</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+async function saveBudget(category) {
+    const input = document.getElementById(`budget-${category}`);
+    const amount = parseFloat(input.value);
+    if (!amount || amount <= 0) {
+        showToast('⚠️ Ingresa un monto válido', true);
+        return;
+    }
+
+    try {
+        await apiFetch('/budgets', {
+            method: 'POST',
+            body: JSON.stringify({ category, amount })
+        });
+        showToast(`✅ Presupuesto de ${category} guardado`);
+    } catch (err) {
+        showToast('❌ Error al guardar', true);
+    }
+}
+
+function initBudgets() {
+    const backBtn = document.getElementById('btn-back-budgets');
+    if (backBtn) backBtn.addEventListener('click', () => switchView('home'));
 }
 
 // ===== UTILIDAD: Escapar HTML =====

@@ -58,6 +58,7 @@
                             <p class="greeting" id="greeting"></p>
                             <p class="greeting-sub">Aquí va tu resumen del mes</p>
                         </div>
+                        <button class="btn-categories" id="btn-categories">📂 Categorías</button>
                         <button class="btn-icon" id="btn-logout" title="Cerrar sesión">🚪</button>
                     </header>
 
@@ -244,6 +245,20 @@
                     <span class="tab-label">Inversiones</span>
                 </button>
             </nav>
+        </div>
+
+        <!-- ===== VISTA CATEGORÍAS/PRESUPUESTOS ===== -->
+        <div id="view-budgets" class="view">
+            <div class="view-scroll">
+                <header class="home-header">
+                    <div>
+                        <h2 style="font-size:22px;font-weight:700;">💰 Categorías</h2>
+                        <p class="greeting-sub">Define tu presupuesto por categoría</p>
+                    </div>
+                    <button class="btn-icon" id="btn-back-budgets">← Volver</button>
+                </header>
+                <div id="budget-list"></div>
+            </div>
         </div>
     </div>
 

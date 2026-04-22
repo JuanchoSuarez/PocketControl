@@ -36,7 +36,7 @@ public class ExpenseController {
         Optional<User> user = authService.validateToken(auth);
         if (user.isEmpty()) return ResponseEntity.status(401).build();
 
-        ExpenseResponse response = expenseService.createFromText(user.get().getId(), request.getText());
+        ExpenseResponse response = expenseService.createFromText(user.get().getId(), request.getText(), request.getCategory());
         if (response == null) {
             return ResponseEntity.badRequest().body(
                 Map.of("message", "No se pudo extraer un monto válido del texto"));

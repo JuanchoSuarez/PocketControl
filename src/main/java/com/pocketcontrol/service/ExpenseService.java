@@ -37,16 +37,16 @@ public class ExpenseService {
     }
 
     /**
-     * Registra un gasto a partir de texto libre.
+     * Registra un gasto a partir de texto libre y categoría opcional.
      */
-    public ExpenseResponse createFromText(Long userId, String text) {
+    public ExpenseResponse createFromText(Long userId, String text, String explicitCategory) {
         BigDecimal amount = classifierService.extractAmount(text);
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
             return null; // No se encontró un monto válido
         }
 
         String description = classifierService.extractDescription(text);
-        String category = classifierService.classify(text);
+        String category = (explicitCategory != null && !explicitCategory.isEmpty()) ? explicitCategory : classifierService.classify(text);
         String icon = classifierService.getIcon(category);
 
         Expense expense = new Expense(userId, amount, description, category);
@@ -126,7 +126,7 @@ public class ExpenseService {
 
         // Presupuesto
         BigDecimal budget = budgetRepository
-            .findByUserIdAndMonthAndYear(userId, today.getMonthValue(), today.getYear())
+            .findByUserIdAndMonthAndYearAndCategory(userId, today.getMonthValue(), today.getYear(), "Total")
             .map(Budget::getAmount)
             .orElse(DEFAULT_BUDGET);
 
@@ -173,7 +173,7 @@ public class ExpenseService {
             userId, range[0], range[1]);
 
         BigDecimal budget = budgetRepository
-            .findByUserIdAndMonthAndYear(userId, today.getMonthValue(), today.getYear())
+            .findByUserIdAndMonthAndYearAndCategory(userId, today.getMonthValue(), today.getYear(), "Total")
             .map(Budget::getAmount)
             .orElse(DEFAULT_BUDGET);
 

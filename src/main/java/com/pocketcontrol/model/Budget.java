@@ -20,31 +20,32 @@ public class Budget {
     @Column(nullable = false)
     private Integer year;
 
+    @Column(nullable = false, length = 50)
+    private String category = "Total";
+
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal amount = new BigDecimal("500000");
 
-    // Constructores
     public Budget() {}
 
-    public Budget(Long userId, Integer month, Integer year) {
+    public Budget(Long userId, Integer month, Integer year, String category, BigDecimal amount) {
         this.userId = userId;
         this.month = month;
         this.year = year;
+        this.category = category;
+        this.amount = amount;
     }
 
-    // Getters y Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-
     public Long getUserId() { return userId; }
     public void setUserId(Long userId) { this.userId = userId; }
-
     public Integer getMonth() { return month; }
     public void setMonth(Integer month) { this.month = month; }
-
     public Integer getYear() { return year; }
     public void setYear(Integer year) { this.year = year; }
-
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
     public BigDecimal getAmount() { return amount; }
     public void setAmount(BigDecimal amount) { this.amount = amount; }
 }
