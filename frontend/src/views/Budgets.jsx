@@ -33,21 +33,30 @@ export default function Budgets() {
     loadBudgets();
   }, []);
 
-  const totalBudget = parseFloat(budgets['Total']) || 500000;
+  const parseBudget = (val) => parseFloat((val || '').toString().replace(/\./g, '')) || 0;
+
+  const formatBudgetInput = (value) => {
+    const digits = value.replace(/[^\d]/g, '');
+    return digits.length > 3
+      ? digits.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+      : digits;
+  };
+
+  const totalBudget = parseBudget(budgets['Total']) || 500000;
 
   const handleSave = async (category) => {
-    const amount = parseFloat(budgets[category]);
+    const amount = parseBudget(budgets[category]);
     if (!amount || amount <= 0) return;
 
     if (category !== 'Total') {
       let sumOther = 0;
       Object.entries(budgets).forEach(([k, v]) => {
         if (k !== 'Total' && k !== category && v) {
-          sumOther += parseFloat(v);
+          sumOther += parseBudget(v);
         }
       });
       if ((sumOther + amount) > totalBudget) {
-        setError(`¡Error! Al asignar $${amount} excedes tu Presupuesto General de $${totalBudget}.`);
+        setError(`¡Error! Al asignar $${amount.toLocaleString('es-CO')} excedes tu Presupuesto General de $${totalBudget.toLocaleString('es-CO')}.`);
         setTimeout(() => setError(''), 5000);
         return;
       }
@@ -102,7 +111,7 @@ export default function Budgets() {
         </div>
       )}
 
-      <header className="px-6 pt-12 pb-6 sticky top-0 z-10 flex justify-between items-start bg-transparent">
+      <header className="px-6 pt-24 pb-6 sticky top-0 z-10 flex justify-between items-start bg-transparent">
         <div>
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Presupuesto</h2>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Gestiona límites y categorías</p>
@@ -131,11 +140,12 @@ export default function Budgets() {
           <div className="flex gap-3">
             <div className="relative flex-1">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-300 font-medium">$</span>
-              <input 
-                type="number"
+              <input
+                type="text"
+                inputMode="numeric"
                 value={budgets['Total'] || ''}
-                onChange={(e) => handleChange('Total', e.target.value)}
-                placeholder="Ej: 500000"
+                onChange={(e) => handleChange('Total', formatBudgetInput(e.target.value))}
+                placeholder="500.000"
                 className="w-full pl-7 pr-3 py-2.5 bg-indigo-700/50 dark:bg-indigo-950/50 border border-indigo-500 dark:border-indigo-600 rounded-xl text-white placeholder-indigo-300/50 font-bold focus:outline-none focus:ring-2 focus:ring-white/50 transition-all"
               />
             </div>
@@ -202,11 +212,12 @@ export default function Budgets() {
               </div>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-medium">$</span>
-                <input 
-                  type="number"
+                <input
+                  type="text"
+                  inputMode="numeric"
                   value={budgets[cat.name] || ''}
-                  onChange={(e) => handleChange(cat.name, e.target.value)}
-                  placeholder="Sin límite"
+                  onChange={(e) => handleChange(cat.name, formatBudgetInput(e.target.value))}
+                  placeholder="No definido"
                   className="w-full pl-7 pr-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-slate-900 dark:text-white transition-all"
                 />
               </div>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { apiFetch } from '../services/api';
 import { formatMoney } from '../lib/utils';
-import { TrendingUp, TrendingDown, Activity, DollarSign, Loader2 } from 'lucide-react';
+import { TrendingUp, TrendingDown, Activity, DollarSign, Loader2, Settings, X } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { format, parseISO, startOfWeek, endOfWeek, eachDayOfInterval, startOfMonth, endOfMonth, eachWeekOfInterval, isSameDay, isSameMonth } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -11,6 +11,19 @@ export default function Stats() {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [chartView, setChartView] = useState('daily'); // 'daily', 'weekly', 'monthly'
+  
+  // Opciones de configuración de estadísticas
+  const [showConfig, setShowConfig] = useState(false);
+  const [visibleStats, setVisibleStats] = useState(() => {
+    const saved = localStorage.getItem('pc_visible_stats');
+    return saved ? JSON.parse(saved) : {
+      total: true, prev: true, count: true, avg: true
+    };
+  });
+
+  useEffect(() => {
+    localStorage.setItem('pc_visible_stats', JSON.stringify(visibleStats));
+  }, [visibleStats]);
 
   useEffect(() => {
     const loadStats = async () => {
@@ -95,41 +108,41 @@ export default function Stats() {
 
   return (
     <div className="flex flex-col h-full transition-colors">
-      <header className="px-6 pt-12 pb-6 sticky top-0 z-10 bg-transparent">
+      <header className="px-6 pt-24 pb-6 sticky top-0 z-10 bg-transparent">
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Estadísticas</h2>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Análisis detallado de tus gastos</p>
       </header>
 
       <div className="px-6 pb-24 space-y-8 overflow-y-auto">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-4 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm transition-colors">
-            <div className="w-8 h-8 rounded-full bg-indigo-50 dark:bg-indigo-500/20 flex items-center justify-center mb-3 text-indigo-600 dark:text-indigo-400">
-              <DollarSign className="w-4 h-4" />
+        
+        {/* Categories Progress (MOVED TO TOP) */}
+        <div>
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4 px-1">Por categoría</h3>
+          {cats.length === 0 ? (
+            <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-8 text-center border border-slate-100 dark:border-slate-700 shadow-sm transition-colors">
+              <p className="text-slate-500 dark:text-slate-400 font-medium">Sin datos aún</p>
             </div>
-            <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Total mes</p>
-            <p className="text-lg font-bold text-slate-900 dark:text-white">{formatMoney(total)}</p>
-          </div>
-          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-4 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm transition-colors">
-            <div className="w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-700 flex items-center justify-center mb-3 text-slate-600 dark:text-slate-300">
-              <Activity className="w-4 h-4" />
+          ) : (
+            <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-3xl p-6 border border-slate-100 dark:border-slate-700 shadow-sm space-y-5 transition-colors">
+              {cats.map((cat, i) => (
+                <div key={i}>
+                  <div className="flex justify-between items-end mb-2">
+                    <span className="font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                      <span className="text-xl bg-slate-50 dark:bg-slate-900 w-8 h-8 flex justify-center items-center rounded-lg">{cat.icon}</span> 
+                      {cat.category}
+                    </span>
+                    <span className="font-bold text-slate-900 dark:text-white">{formatMoney(cat.total)}</span>
+                  </div>
+                  <div className="h-2 w-full bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"
+                      style={{ width: `${Math.min(cat.percent, 100)}%` }}
+                    ></div>
+                  </div>
+                </div>
+              ))}
             </div>
-            <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Mes anterior</p>
-            <p className="text-lg font-bold text-slate-900 dark:text-white">{formatMoney(prev)}</p>
-          </div>
-          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-4 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm transition-colors">
-            <div className="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-500/20 flex items-center justify-center mb-3 text-blue-600 dark:text-blue-400">
-              <TrendingUp className="w-4 h-4" />
-            </div>
-            <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Transacciones</p>
-            <p className="text-lg font-bold text-slate-900 dark:text-white">{count}</p>
-          </div>
-          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-4 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm transition-colors">
-            <div className="w-8 h-8 rounded-full bg-purple-50 dark:bg-purple-500/20 flex items-center justify-center mb-3 text-purple-600 dark:text-purple-400">
-              <TrendingDown className="w-4 h-4" />
-            </div>
-            <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Promedio/día</p>
-            <p className="text-lg font-bold text-slate-900 dark:text-white">{formatMoney(avg)}</p>
-          </div>
+          )}
         </div>
 
         {/* Interactive Chart */}
@@ -189,36 +202,84 @@ export default function Stats() {
           </div>
         </div>
 
-        {/* Categories Progress */}
+        {/* Resumen Progress (MOVED TO BOTTOM & SMALLER) */}
         <div>
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4 px-1">Por categoría</h3>
-          {cats.length === 0 ? (
-            <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-8 text-center border border-slate-100 dark:border-slate-700 shadow-sm transition-colors">
-              <p className="text-slate-500 dark:text-slate-400 font-medium">Sin datos aún</p>
-            </div>
-          ) : (
-            <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-3xl p-6 border border-slate-100 dark:border-slate-700 shadow-sm space-y-5 transition-colors">
-              {cats.map((cat, i) => (
-                <div key={i}>
-                  <div className="flex justify-between items-end mb-2">
-                    <span className="font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                      <span className="text-xl bg-slate-50 dark:bg-slate-900 w-8 h-8 flex justify-center items-center rounded-lg">{cat.icon}</span> 
-                      {cat.category}
-                    </span>
-                    <span className="font-bold text-slate-900 dark:text-white">{formatMoney(cat.total)}</span>
-                  </div>
-                  <div className="h-2 w-full bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"
-                      style={{ width: `${Math.min(cat.percent, 100)}%` }}
-                    ></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          <div className="flex justify-between items-center mb-4 px-1">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Progreso</h3>
+            <button 
+              onClick={() => setShowConfig(true)}
+              className="w-8 h-8 bg-slate-200 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-indigo-100 dark:hover:bg-indigo-900 transition-colors"
+            >
+              <Settings className="w-4 h-4" />
+            </button>
+          </div>
+          
+          <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2 px-1">
+            {visibleStats.total && (
+              <div className="flex-shrink-0 w-32 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-3 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col items-center text-center transition-colors">
+                <DollarSign className="w-5 h-5 text-indigo-500 mb-2" />
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Total mes</p>
+                <p className="text-sm font-extrabold text-slate-900 dark:text-white">{formatMoney(total)}</p>
+              </div>
+            )}
+            {visibleStats.prev && (
+              <div className="flex-shrink-0 w-32 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-3 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col items-center text-center transition-colors">
+                <Activity className="w-5 h-5 text-slate-500 mb-2" />
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Mes anterior</p>
+                <p className="text-sm font-extrabold text-slate-900 dark:text-white">{formatMoney(prev)}</p>
+              </div>
+            )}
+            {visibleStats.count && (
+              <div className="flex-shrink-0 w-32 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-3 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col items-center text-center transition-colors">
+                <TrendingUp className="w-5 h-5 text-blue-500 mb-2" />
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Transacciones</p>
+                <p className="text-sm font-extrabold text-slate-900 dark:text-white">{count}</p>
+              </div>
+            )}
+            {visibleStats.avg && (
+              <div className="flex-shrink-0 w-32 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-3 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col items-center text-center transition-colors">
+                <TrendingDown className="w-5 h-5 text-purple-500 mb-2" />
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Promedio/día</p>
+                <p className="text-sm font-extrabold text-slate-900 dark:text-white">{formatMoney(avg)}</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
+
+      {/* Config Modal */}
+      {showConfig && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-6 animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-900 rounded-[2rem] p-6 w-full max-w-sm shadow-2xl relative border border-slate-100 dark:border-slate-800 animate-in zoom-in-95 duration-200">
+            <button 
+              onClick={() => setShowConfig(false)}
+              className="absolute top-4 right-4 w-8 h-8 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-800 dark:hover:text-white transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Personalizar Progreso</h3>
+            
+            <div className="space-y-4">
+              <label className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                <span className="font-semibold text-slate-700 dark:text-slate-300">Total mes</span>
+                <input type="checkbox" checked={visibleStats.total} onChange={(e) => setVisibleStats({...visibleStats, total: e.target.checked})} className="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500 bg-slate-200 border-transparent" />
+              </label>
+              <label className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                <span className="font-semibold text-slate-700 dark:text-slate-300">Mes anterior</span>
+                <input type="checkbox" checked={visibleStats.prev} onChange={(e) => setVisibleStats({...visibleStats, prev: e.target.checked})} className="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500 bg-slate-200 border-transparent" />
+              </label>
+              <label className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                <span className="font-semibold text-slate-700 dark:text-slate-300">Transacciones</span>
+                <input type="checkbox" checked={visibleStats.count} onChange={(e) => setVisibleStats({...visibleStats, count: e.target.checked})} className="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500 bg-slate-200 border-transparent" />
+              </label>
+              <label className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                <span className="font-semibold text-slate-700 dark:text-slate-300">Promedio por día</span>
+                <input type="checkbox" checked={visibleStats.avg} onChange={(e) => setVisibleStats({...visibleStats, avg: e.target.checked})} className="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500 bg-slate-200 border-transparent" />
+              </label>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

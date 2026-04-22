@@ -21,18 +21,8 @@ public class ClassifierService {
     private static final Map<String, String> CATEGORY_ICONS = new LinkedHashMap<>();
 
     static {
-        // Transporte
-        KEYWORD_MAP.put("Transporte", Arrays.asList(
-            "transmilenio", "sitp", "uber", "didi", "cabify", "indriver", "indrive",
-            "taxi", "bus", "buseta", "colectivo", "metro", "mio", "megabus",
-            "gasolina", "gas", "tanqueo", "parqueadero", "parking", "peaje",
-            "bici", "bicicleta", "ecobici", "patineta", "scooter",
-            "vuelo", "avion", "avión", "avianca", "latam", "viva", "wingo",
-            "flota", "terminal", "pasaje", "tiquete", "rappi moto", "picap"
-        ));
-
-        // Alimentación
-        KEYWORD_MAP.put("Alimentación", Arrays.asList(
+        // Restaurantes (antes Alimentación + Transporte meals)
+        KEYWORD_MAP.put("Restaurantes", Arrays.asList(
             "almuerzo", "desayuno", "cena", "comida", "merienda", "onces",
             "café", "cafe", "tinto", "cappuccino", "latte", "aromática", "aromatica",
             "restaurante", "corrientazo", "bandeja", "ajiaco", "sancocho", "arepa",
@@ -42,22 +32,30 @@ public class ClassifierService {
             "mcdonalds", "mcdonald", "subway", "kfc", "frisby", "presto",
             "crepes", "wok", "jugos", "jugo", "gaseosa", "cerveza", "trago",
             "helado", "postre", "snack", "galleta", "chocolate", "dulce",
-            "asado", "bbq", "pollo", "carne", "arroz", "sopa", "tamal"
+            "asado", "bbq", "pollo", "carne", "arroz", "sopa", "tamal",
+            "transmilenio", "tm", "transmi", "sitp", "uber", "didi", "cabify", "indriver", "indrive",
+            "taxi", "bus", "buseta", "colectivo", "metro", "mio", "megabus",
+            "gasolina", "gas", "tanqueo", "parqueadero", "parking", "peaje",
+            "bici", "bicicleta", "ecobici", "patineta", "scooter",
+            "vuelo", "avion", "avión", "avianca", "latam", "viva", "wingo",
+            "flota", "terminal", "pasaje", "tiquete", "rappi moto", "picap"
         ));
 
-        // Mercado / Compras de supermercado
-        KEYWORD_MAP.put("Mercado", Arrays.asList(
+        // Supermercado y Hogar
+        KEYWORD_MAP.put("Supermercado y Hogar", Arrays.asList(
             "mercado", "supermercado", "éxito", "exito", "jumbo", "carulla",
             "d1", "ara", "justo", "bueno", "olimpica", "olímpica", "surtimax",
-            "alkosto", "makro", "pricesmart", "costco", "metro", "zapatoca",
-            "frutas", "verduras", "leche", "huevos", "aceite", "arroz",
+            "alkosto", "makro", "pricesmart", "costco",
+            "frutas", "verduras", "leche", "huevos", "aceite",
             "papel", "aseo", "detergente", "jabón", "jabon", "shampoo",
-            "droguería", "drogueria", "farmacia", "tienda", "miscelánea",
-            "compras", "víveres", "viveres", "despensa"
+            "tienda", "miscelánea",
+            "compras", "víveres", "viveres", "despensa",
+            "hogar", "casa", "cocina", "lavadora", "nevera", "mueble", "decoración",
+            "bombillo", "escoba", "trapeador", "arriendo", "servicios", "luz", "agua", "internet"
         ));
 
-        // Entretenimiento
-        KEYWORD_MAP.put("Entretenimiento", Arrays.asList(
+        // Entretenimiento y Suscripciones
+        KEYWORD_MAP.put("Entretenimiento y Suscripciones", Arrays.asList(
             "cine", "película", "pelicula", "netflix", "spotify", "disney",
             "hbo", "prime", "amazon", "youtube", "premium", "streaming",
             "concierto", "teatro", "museo", "parque", "diversión", "diversion",
@@ -70,8 +68,8 @@ public class ClassifierService {
             "apuesta", "casino", "lotería", "loteria", "baloto", "chance"
         ));
 
-        // Educación
-        KEYWORD_MAP.put("Educación", Arrays.asList(
+        // Educación y Cursos
+        KEYWORD_MAP.put("Educación y Cursos", Arrays.asList(
             "universidad", "matrícula", "matricula", "semestre", "pensión", "pension",
             "colegio", "curso", "clase", "taller", "diplomado", "maestría", "maestria",
             "especialización", "especializacion", "doctorado", "pregrado",
@@ -83,8 +81,8 @@ public class ClassifierService {
             "certificado", "icfes", "saber", "toefl", "ielts"
         ));
 
-        // Salud
-        KEYWORD_MAP.put("Salud", Arrays.asList(
+        // Salud y Farmacia
+        KEYWORD_MAP.put("Salud y Farmacia", Arrays.asList(
             "médico", "medico", "doctor", "doctora", "cita", "consulta",
             "eps", "prepagada", "hospital", "clínica", "clinica", "urgencias",
             "medicina", "medicamento", "pastilla", "droga", "fórmula", "formula",
@@ -94,17 +92,17 @@ public class ClassifierService {
             "psicólogo", "psicologo", "terapia", "psiquiatra",
             "dermatólogo", "dermatologo", "crema", "protector",
             "vacuna", "inyección", "inyeccion", "cirugía", "cirugia",
-            "seguro", "póliza", "poliza", "copago"
+            "seguro", "póliza", "poliza", "copago",
+            "droguería", "drogueria", "farmacia"
         ));
 
         // Iconos
-        CATEGORY_ICONS.put("Transporte", "🚌");
-        CATEGORY_ICONS.put("Alimentación", "🍔");
-        CATEGORY_ICONS.put("Mercado", "🛒");
-        CATEGORY_ICONS.put("Entretenimiento", "🎮");
-        CATEGORY_ICONS.put("Educación", "📚");
-        CATEGORY_ICONS.put("Salud", "💊");
-        CATEGORY_ICONS.put("Otro", "📦");
+        CATEGORY_ICONS.put("Restaurantes", "🍽️");
+        CATEGORY_ICONS.put("Supermercado y Hogar", "🛒");
+        CATEGORY_ICONS.put("Entretenimiento y Suscripciones", "🎮");
+        CATEGORY_ICONS.put("Educación y Cursos", "📚");
+        CATEGORY_ICONS.put("Salud y Farmacia", "💊");
+        CATEGORY_ICONS.put("Misceláneos", "📦");
     }
 
     /**
@@ -131,7 +129,7 @@ public class ClassifierService {
                 }
             }
         }
-        return "Otro";
+        return "Misceláneos";
     }
 
     /**

@@ -7,6 +7,7 @@ import { useCategories } from '../lib/categories';
 export default function History() {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState('Todas');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const { categories } = useCategories();
 
@@ -38,30 +39,53 @@ export default function History() {
 
   return (
     <div className="flex flex-col h-full transition-colors">
-      <header className="px-6 pt-12 pb-6 sticky top-0 z-10 bg-transparent">
+      <header className="px-6 pt-24 pb-6 sticky top-0 z-10 bg-transparent">
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Historial</h2>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Todos tus movimientos</p>
       </header>
 
-      <div className="px-6 pb-4">
-        <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-2 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-3 transition-colors">
-          <div className="pl-3">
-            <Filter className="w-5 h-5 text-slate-400" />
+      <div className="px-6 pb-4 relative z-20">
+        <div 
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-3 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between cursor-pointer transition-all hover:border-indigo-400 dark:hover:border-indigo-500"
+        >
+          <div className="flex items-center gap-3">
+            <Filter className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
+            <span className="text-slate-700 dark:text-slate-300 font-bold">
+              {filter === 'Todas' ? 'Todas las categorías' : `${categories.find(c => c.name === filter)?.icon || '📦'} ${filter}`}
+            </span>
           </div>
-          <select 
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="flex-1 bg-transparent border-none py-2 pr-4 text-slate-700 dark:text-slate-300 font-medium focus:outline-none focus:ring-0 appearance-none"
-          >
-            <option value="Todas" className="text-slate-900">Todas las categorías</option>
-            {categories.map(cat => (
-              <option key={cat.name} value={cat.name} className="text-slate-900">{cat.icon} {cat.name}</option>
-            ))}
-          </select>
+          <div className={`transform transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}>
+            <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+          </div>
         </div>
+
+        {isDropdownOpen && (
+          <div className="absolute top-full left-6 right-6 mt-2 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="max-h-64 overflow-y-auto no-scrollbar py-2">
+              <div 
+                onClick={() => { setFilter('Todas'); setIsDropdownOpen(false); }}
+                className={`px-4 py-3 cursor-pointer transition-colors flex items-center gap-3 ${filter === 'Todas' ? 'bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold' : 'hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-700 dark:text-slate-300 font-medium'}`}
+              >
+                <div className="w-6 text-center">🌍</div>
+                Todas las categorías
+              </div>
+              {categories.map(cat => (
+                <div 
+                  key={cat.name}
+                  onClick={() => { setFilter(cat.name); setIsDropdownOpen(false); }}
+                  className={`px-4 py-3 cursor-pointer transition-colors flex items-center gap-3 ${filter === cat.name ? 'bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold' : 'hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-700 dark:text-slate-300 font-medium'}`}
+                >
+                  <div className="w-6 text-center">{cat.icon}</div>
+                  {cat.name}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
-      <div className="px-6 pb-24 flex-1 overflow-y-auto">
+      <div className="px-6 pb-24 flex-1 overflow-y-auto relative z-10">
         {loading ? (
           <div className="flex justify-center mt-12"><Loader2 className="w-8 h-8 text-indigo-500 animate-spin" /></div>
         ) : data.length === 0 ? (

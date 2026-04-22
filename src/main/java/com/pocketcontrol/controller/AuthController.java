@@ -39,7 +39,7 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<?> me(@RequestHeader(value = "Authorization", required = false) String auth) {
         return authService.validateToken(auth)
-            .map(user -> ResponseEntity.ok(Map.of("email", user.getEmail())))
+            .map(user -> ResponseEntity.ok(Map.of("email", user.getEmail(), "stars", user.getStars())))
             .orElse(ResponseEntity.status(401).build());
     }
 }

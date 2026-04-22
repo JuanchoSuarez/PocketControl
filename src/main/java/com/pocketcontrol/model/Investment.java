@@ -24,17 +24,24 @@ public class Investment {
     @Column(nullable = false, length = 50)
     private String type;
 
+    @Column(length = 50)
+    private String duration;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
     // Constructores
     public Investment() {}
 
-    public Investment(Long userId, String name, BigDecimal amount, String type) {
+    public Investment(Long userId, String name, BigDecimal amount, String type, String duration, LocalDateTime createdAt) {
         this.userId = userId;
         this.name = name;
         this.amount = amount;
         this.type = type;
+        this.duration = duration;
+        if (createdAt != null) {
+            this.createdAt = createdAt;
+        }
     }
 
     // Getters y Setters
@@ -52,6 +59,9 @@ public class Investment {
 
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
+
+    public String getDuration() { return duration; }
+    public void setDuration(String duration) { this.duration = duration; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

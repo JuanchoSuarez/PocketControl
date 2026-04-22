@@ -6,6 +6,8 @@ import com.pocketcontrol.model.Budget;
 import com.pocketcontrol.model.Expense;
 import com.pocketcontrol.repository.BudgetRepository;
 import com.pocketcontrol.repository.ExpenseRepository;
+import com.pocketcontrol.repository.UserRepository;
+import com.pocketcontrol.model.User;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -24,16 +26,19 @@ public class ExpenseService {
     private final ExpenseRepository expenseRepository;
     private final BudgetRepository budgetRepository;
     private final ClassifierService classifierService;
+    private final UserRepository userRepository;
 
     // Presupuesto mensual por defecto
     private static final BigDecimal DEFAULT_BUDGET = new BigDecimal("500000");
 
     public ExpenseService(ExpenseRepository expenseRepository,
                          BudgetRepository budgetRepository,
-                         ClassifierService classifierService) {
+                         ClassifierService classifierService,
+                         UserRepository userRepository) {
         this.expenseRepository = expenseRepository;
         this.budgetRepository = budgetRepository;
         this.classifierService = classifierService;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -51,6 +56,11 @@ public class ExpenseService {
 
         Expense expense = new Expense(userId, amount, description, category);
         expense = expenseRepository.save(expense);
+
+        userRepository.findById(userId).ifPresent(u -> {
+            u.setStars(u.getStars() + 1);
+            userRepository.save(u);
+        });
 
         return new ExpenseResponse(
             expense.getId(), expense.getAmount(), expense.getDescription(),

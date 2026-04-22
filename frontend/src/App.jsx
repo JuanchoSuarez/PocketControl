@@ -8,6 +8,8 @@ import Stats from './views/Stats';
 import History from './views/History';
 import Investments from './views/Investments';
 import Budgets from './views/Budgets';
+import Social from './views/Social';
+import Metas from './views/Metas';
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(!!getAuthToken());
@@ -35,6 +37,8 @@ export default function App() {
           <Route path="history" element={<History />} />
           <Route path="investments" element={<Investments />} />
           <Route path="budgets" element={<Budgets />} />
+          <Route path="social" element={<Social />} />
+          <Route path="metas" element={<Metas />} />
         </Route>
       </Routes>
     </BrowserRouter>

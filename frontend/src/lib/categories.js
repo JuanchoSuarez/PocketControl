@@ -1,13 +1,12 @@
 import { useState } from 'react';
 
 const DEFAULT_CATEGORIES = [
-  { name: 'Transporte', icon: '🚌', isCustom: false },
-  { name: 'Alimentación', icon: '🍔', isCustom: false },
-  { name: 'Mercado', icon: '🛒', isCustom: false },
-  { name: 'Entretenimiento', icon: '🎮', isCustom: false },
-  { name: 'Educación', icon: '📚', isCustom: false },
-  { name: 'Salud', icon: '💊', isCustom: false },
-  { name: 'Otro', icon: '📦', isCustom: false }
+  { name: 'Restaurantes', icon: '🍽️', isCustom: false },
+  { name: 'Supermercado y Hogar', icon: '🛒', isCustom: false },
+  { name: 'Entretenimiento y Suscripciones', icon: '🎮', isCustom: false },
+  { name: 'Educación y Cursos', icon: '📚', isCustom: false },
+  { name: 'Salud y Farmacia', icon: '💊', isCustom: false },
+  { name: 'Misceláneos', icon: '📦', isCustom: false }
 ];
 
 export function getCategories() {

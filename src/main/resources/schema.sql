@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     auth_token VARCHAR(255),
+    stars INTEGER NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -36,6 +37,7 @@ CREATE TABLE IF NOT EXISTS investments (
     name VARCHAR(255) NOT NULL,
     amount NUMERIC(12, 2) NOT NULL,
     type VARCHAR(50) NOT NULL,
+    duration VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -43,3 +45,7 @@ CREATE TABLE IF NOT EXISTS investments (
 CREATE INDEX IF NOT EXISTS idx_expenses_user_date ON expenses(user_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_expenses_category ON expenses(user_id, category);
 CREATE INDEX IF NOT EXISTS idx_investments_user ON investments(user_id);
+
+-- Migraciones para tablas existentes
+ALTER TABLE users ADD COLUMN IF NOT EXISTS stars INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE investments ADD COLUMN IF NOT EXISTS duration VARCHAR(50);

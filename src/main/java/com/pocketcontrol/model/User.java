@@ -23,6 +23,9 @@ public class User {
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Column(nullable = false)
+    private int stars = 0;
+
     // Constructores
     public User() {}
 
@@ -46,4 +49,7 @@ public class User {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public int getStars() { return stars; }
+    public void setStars(int stars) { this.stars = stars; }
 }
