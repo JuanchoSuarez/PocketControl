@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { Trophy, Star, Users, TrendingUp, Sparkles, Medal, Settings, X, TrendingDown } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../services/api';
 
 // --- Mini sparkline chart component ---
@@ -65,7 +64,6 @@ const ALL_STOCKS = [
 ];
 
 export default function Social() {
-  const navigate = useNavigate();
   const [stars, setStars] = useState(0);
   const [loading, setLoading] = useState(true);
   const [showConfig, setShowConfig] = useState(false);
@@ -166,12 +164,9 @@ export default function Social() {
                 <span className="text-xl">⭐️</span>
               </div>
             </div>
-            <button
-              onClick={() => navigate('/metas')}
-              className="w-16 h-16 bg-white/20 hover:bg-white/30 active:scale-95 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/30 transition-all"
-            >
+            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/30">
               <Trophy className="w-8 h-8 text-white" />
-            </button>
+            </div>
           </div>
           <div className="mt-6 flex items-center gap-2 text-xs font-semibold bg-white/20 w-fit px-3 py-1.5 rounded-full backdrop-blur-md">
             <Sparkles className="w-4 h-4 text-white" />

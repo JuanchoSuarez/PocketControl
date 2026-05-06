@@ -103,9 +103,9 @@ export default function Home() {
 
   return (
     <div className="flex flex-col h-full transition-colors">
-      <header className="px-6 pt-24 pb-4 sticky top-0 z-10 bg-transparent flex flex-col items-start gap-3">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-white">{getGreeting()}</h1>
+      <header className="px-6 pt-12 pb-4 sticky top-0 z-10 bg-transparent flex flex-col items-start gap-3">
+        <div className="w-full pr-24">
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white leading-tight">{getGreeting()}</h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Aquí va tu resumen del mes</p>
         </div>
         <div className="flex items-center gap-1.5 bg-amber-50 dark:bg-amber-500/20 px-4 py-2 rounded-full border border-amber-200 dark:border-amber-500/30 text-amber-600 dark:text-amber-400 shadow-sm relative transition-transform hover:scale-105">

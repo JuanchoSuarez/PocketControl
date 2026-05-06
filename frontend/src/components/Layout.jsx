@@ -1,5 +1,5 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { Home, PieChart, Clock, TrendingUp, LogOut, Moon, Sun, Users } from 'lucide-react';
+import { Home, PieChart, Clock, TrendingUp, LogOut, Moon, Sun, Users, Wifi, Battery, Signal } from 'lucide-react';
 import { clearAuth } from '../services/api';
 import { useState, useEffect } from 'react';
 
@@ -9,6 +9,7 @@ export default function Layout({ onLogout }) {
     localStorage.getItem('theme') === 'dark' || 
     (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
   );
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     if (isDark) {
@@ -19,6 +20,11 @@ export default function Layout({ onLogout }) {
       localStorage.setItem('theme', 'light');
     }
   }, [isDark]);
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 60000);
+    return () => clearInterval(timer);
+  }, []);
 
   const handleLogout = () => {
     clearAuth();
@@ -46,8 +52,26 @@ export default function Layout({ onLogout }) {
           <div className="absolute bottom-[-10%] right-[-20%] w-[150%] max-w-[500px] aspect-square bg-purple-500/20 dark:bg-fuchsia-600/10 rounded-full mix-blend-multiply dark:mix-blend-lighten filter blur-[100px] animate-pulse" style={{ animationDelay: '2s' }}></div>
         </div>
         
+        {/* Status Bar / Notch */}
+        <div className="absolute top-0 left-0 w-full px-6 py-2.5 flex justify-between items-center z-[60] pointer-events-none">
+          {/* Time */}
+          <span className="text-[13px] font-bold text-slate-800 dark:text-slate-200">
+            {currentTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+          </span>
+          
+          {/* Notch */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[140px] h-[30px] bg-slate-900 dark:bg-black rounded-b-3xl"></div>
+
+          {/* Icons */}
+          <div className="flex items-center gap-1.5 text-slate-800 dark:text-slate-200">
+            <Signal className="w-[14px] h-[14px]" />
+            <Wifi className="w-[14px] h-[14px]" />
+            <Battery className="w-4 h-4" />
+          </div>
+        </div>
+
         {/* Floating Controls */}
-        <div className="absolute top-8 right-6 z-50 flex gap-2">
+        <div className="absolute top-12 right-6 z-50 flex gap-2">
           <button
             onClick={() => setIsDark(!isDark)}
             className="w-10 h-10 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-full flex items-center justify-center text-slate-600 dark:text-slate-300 shadow-sm hover:scale-105 transition-all border border-slate-200 dark:border-slate-700"
