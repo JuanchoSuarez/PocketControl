@@ -61,6 +61,30 @@ public class ExpenseController {
     }
 
     /**
+     * PUT /api/expenses/{id}/category — Actualizar la categoría de un gasto.
+     */
+    @PutMapping("/{id}/category")
+    public ResponseEntity<?> updateCategory(
+            @RequestHeader("Authorization") String auth,
+            @PathVariable Long id,
+            @RequestBody Map<String, String> request) {
+
+        Optional<User> user = authService.validateToken(auth);
+        if (user.isEmpty()) return ResponseEntity.status(401).build();
+
+        String newCategory = request.get("category");
+        if (newCategory == null || newCategory.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Categoría requerida"));
+        }
+
+        ExpenseResponse response = expenseService.updateCategory(user.get().getId(), id, newCategory);
+        if (response == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    /**
      * DELETE /api/expenses/{id} — Eliminar un gasto.
      */
     @DeleteMapping("/{id}")

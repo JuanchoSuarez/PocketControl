@@ -98,6 +98,20 @@ public class ExpenseService {
     }
 
     /**
+     * Actualiza la categoría de un gasto.
+     */
+    public ExpenseResponse updateCategory(Long userId, Long expenseId, String newCategory) {
+        return expenseRepository.findById(expenseId)
+            .filter(e -> e.getUserId().equals(userId))
+            .map(e -> {
+                e.setCategory(newCategory);
+                expenseRepository.save(e);
+                return toResponse(e);
+            })
+            .orElse(null);
+    }
+
+    /**
      * Elimina un gasto del usuario.
      */
     public boolean deleteExpense(Long userId, Long expenseId) {

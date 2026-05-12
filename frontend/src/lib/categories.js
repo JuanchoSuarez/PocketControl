@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
 const DEFAULT_CATEGORIES = [
-  { name: 'Restaurantes', icon: '🍽️', isCustom: false },
+  { name: 'Alimentación', icon: '🍔', isCustom: false },
+  { name: 'Transporte', icon: '🚕', isCustom: false },
   { name: 'Supermercado y Hogar', icon: '🛒', isCustom: false },
   { name: 'Entretenimiento y Suscripciones', icon: '🎮', isCustom: false },
   { name: 'Educación y Cursos', icon: '📚', isCustom: false },

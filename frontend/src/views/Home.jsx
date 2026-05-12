@@ -69,6 +69,27 @@ export default function Home() {
     }
   };
 
+  const handleUpdateCategory = async (id, newCategory) => {
+    try {
+      const res = await apiFetch(`/expenses/${id}/category`, {
+        method: 'PUT',
+        body: JSON.stringify({ category: newCategory })
+      });
+      if (res) {
+        // Update local data optimistically
+        setData(prev => {
+          if (!prev) return prev;
+          const newRecent = prev.recentExpenses.map(exp => 
+            exp.id === id ? { ...exp, category: res.category, categoryIcon: res.categoryIcon } : exp
+          );
+          return { ...prev, recentExpenses: newRecent };
+        });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const handleTextChange = (e) => {
     const val = e.target.value;
     // Match each numeric sequence (digits possibly mixed with dots from previous formatting),
@@ -203,11 +224,25 @@ export default function Home() {
                   <div className="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-500/20 flex items-center justify-center text-2xl border border-indigo-100/50 dark:border-indigo-500/20">
                     {exp.categoryIcon || '📦'}
                   </div>
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 flex flex-col justify-center">
                     <p className="font-bold text-slate-900 dark:text-white truncate">{exp.description}</p>
-                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-0.5">{exp.category} • {formatDate(exp.createdAt)}</p>
+                    <div className="flex items-center gap-1.5 mt-1 text-xs font-medium text-slate-500 dark:text-slate-400">
+                      <div className="relative inline-block max-w-[110px] sm:max-w-[140px]">
+                        <select
+                          value={exp.category}
+                          onChange={(e) => handleUpdateCategory(exp.id, e.target.value)}
+                          className="w-full appearance-none bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-800 rounded-md pl-1.5 pr-5 py-0.5 outline-none cursor-pointer hover:bg-indigo-100 dark:hover:bg-indigo-800/40 transition-colors truncate"
+                        >
+                          {categories.map(c => <option key={c.name} value={c.name} className="text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-800">{c.name}</option>)}
+                        </select>
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1 text-indigo-500 dark:text-indigo-400">
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                      </div>
+                      <span className="flex-shrink-0 whitespace-nowrap">• {formatDate(exp.createdAt)}</span>
+                    </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right ml-2 flex-shrink-0">
                     <p className="font-bold text-slate-900 dark:text-white">-{formatMoney(exp.amount)}</p>
                   </div>
                 </div>

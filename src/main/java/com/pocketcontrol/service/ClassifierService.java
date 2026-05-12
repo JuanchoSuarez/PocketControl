@@ -75,56 +75,56 @@ public class ClassifierService {
 
         // ---- RESTAURANTES / COMIDA ----
         // Marcas muy específicas (3 pts)
-        rule("mcdonalds|mcdonald's", "Restaurantes", 3);
-        rule("burger king", "Restaurantes", 3);
-        rule("subway subs?", "Restaurantes", 3);
-        rule("kfc pollo|kentucky", "Restaurantes", 3);
-        rule("frisby", "Restaurantes", 3);
-        rule("presto", "Restaurantes", 3);
-        rule("crepes \\w+ waffles|crepes and waffles", "Restaurantes", 3);
-        rule("el corral", "Restaurantes", 3);
-        rule("domino's|dominos", "Restaurantes", 3);
-        rule("pizza hut", "Restaurantes", 3);
-        rule("wendy's|wendys", "Restaurantes", 3);
-        rule("rappi domicilio|ifood domicilio|domicilio comida", "Restaurantes", 3);
-        rule("corrientazo|ejecutivo|bandeja paisa|ajiaco|sancocho", "Restaurantes", 3);
-        rule("salchipapa|buñuelo|pandebono|changua|obleas", "Restaurantes", 3);
-        rule("tinto|aguapanela|limonada|aromática", "Restaurantes", 3);
-        rule("sushi|ramen|tacos|burritos|shawarma|falafe", "Restaurantes", 3);
+        rule("mcdonalds|mcdonald's", "Alimentación", 3);
+        rule("burger king", "Alimentación", 3);
+        rule("subway subs?", "Alimentación", 3);
+        rule("kfc pollo|kentucky", "Alimentación", 3);
+        rule("frisby", "Alimentación", 3);
+        rule("presto", "Alimentación", 3);
+        rule("crepes \\w+ waffles|crepes and waffles", "Alimentación", 3);
+        rule("el corral", "Alimentación", 3);
+        rule("domino's|dominos", "Alimentación", 3);
+        rule("pizza hut", "Alimentación", 3);
+        rule("wendy's|wendys", "Alimentación", 3);
+        rule("rappi domicilio|ifood domicilio|domicilio comida", "Alimentación", 3);
+        rule("corrientazo|ejecutivo|bandeja paisa|ajiaco|sancocho", "Alimentación", 3);
+        rule("salchipapa|buñuelo|pandebono|changua|obleas", "Alimentación", 3);
+        rule("tinto|aguapanela|limonada|aromática", "Alimentación", 3);
+        rule("sushi|ramen|tacos|burritos|shawarma|falafe", "Alimentación", 3);
         // Palabras clave claras (2 pts)
-        rule("almuerzo|desayuno|cena|onces|merienda", "Restaurantes", 2);
-        rule("restaurante|cafetería|cafeteria|comedor|fritanga", "Restaurantes", 2);
-        rule("pizza|hamburguesa|burger|perro caliente|hot dog", "Restaurantes", 2);
-        rule("café|cafe|cappuccino|latte|americano|espresso", "Restaurantes", 2);
-        rule("helado|postre|torta|pastel|ponqué|ponque", "Restaurantes", 2);
-        rule("empanada|arepa|tamal|aborrajado|patacón|patacon", "Restaurantes", 2);
-        rule("jugo|gaseosa|bebida|limonada|smoothie|batido", "Restaurantes", 2);
-        rule("almuercito|comidita|comienzo|rapidito", "Restaurantes", 2);
+        rule("almuerzo|desayuno|cena|onces|merienda", "Alimentación", 2);
+        rule("restaurante|cafetería|cafeteria|comedor|fritanga", "Alimentación", 2);
+        rule("pizza|hamburguesa|burger|perro caliente|hot dog", "Alimentación", 2);
+        rule("café|cafe|cappuccino|latte|americano|espresso", "Alimentación", 2);
+        rule("helado|postre|torta|pastel|ponqué|ponque", "Alimentación", 2);
+        rule("empanada|arepa|tamal|aborrajado|patacón|patacon", "Alimentación", 2);
+        rule("jugo|gaseosa|bebida|limonada|smoothie|batido", "Alimentación", 2);
+        rule("almuercito|comidita|comienzo|rapidito", "Alimentación", 2);
         // Contexto débil (1 pt)
-        rule("comida|comer|alimento|snack|galleta|dulce|chocolate", "Restaurantes", 1);
-        rule("pan|panadería|panaderia|repostería", "Restaurantes", 1);
-        rule("asado|bbq|parrilla|carne|pollo asado", "Restaurantes", 1);
-        rule("domicilio|pedido|entregar|delivery", "Restaurantes", 1);
-        rule("cerveza|trago|ron|aguardiente|whisky|coctel|cóctel", "Restaurantes", 1);
+        rule("comida|comer|alimento|snack|galleta|dulce|chocolate", "Alimentación", 1);
+        rule("pan|panadería|panaderia|repostería", "Alimentación", 1);
+        rule("asado|bbq|parrilla|carne|pollo asado", "Alimentación", 1);
+        rule("domicilio|pedido|entregar|delivery", "Alimentación", 1);
+        rule("cerveza|trago|ron|aguardiente|whisky|coctel|cóctel", "Alimentación", 1);
 
         // ---- TRANSPORTE ----
         // Muy específicos (3 pts)
-        rule("transmilenio|trans[- ]?milenio", "Restaurantes", -1); // trampa: ya está en restaurantes por merge — quitar
+        rule("transmilenio|trans[- ]?milenio", "Alimentación", -1); // trampa: ya está en restaurantes por merge — quitar
         rule("transmilenio|transmilen", "Supermercado y Hogar", -1);
         // Corrección: transporte como categoría separada sería ideal, 
         // pero el usuario los fusionó. Poner en Restaurantes no tiene sentido.
         // => Usar Misceláneos para transporte. Redefinir:
-        rule("transmilenio|transmilen|sitp|bus mio", "Misceláneos", 3);
-        rule("uber|didi|cabify|indriver|indrive|picap|beat", "Misceláneos", 3);
-        rule("taxi|taxista|taxis", "Misceláneos", 2);
-        rule("bus|buseta|colectivo|flota|terminal buses", "Misceláneos", 2);
-        rule("gasolina|combustible|tanqueo|diesel", "Misceláneos", 2);
-        rule("parqueadero|estacionamiento", "Misceláneos", 2);
-        rule("peaje|autopista", "Misceláneos", 2);
-        rule("vuelo|aérea|tiquete avión|avianca|latam|viva air|wingo", "Misceláneos", 3);
-        rule("pasaje|tiquete transporte|boleto", "Misceláneos", 1);
-        rule("bicicleta|patineta|scooter|bici", "Misceláneos", 2);
-        rule("metro|mio bus|megabus", "Misceláneos", 2);
+        rule("transmilenio|transmilen|sitp|bus mio", "Transporte", 3);
+        rule("uber|didi|cabify|indriver|indrive|picap|beat", "Transporte", 3);
+        rule("taxi|taxista|taxis", "Transporte", 2);
+        rule("bus|buseta|colectivo|flota|terminal buses", "Transporte", 2);
+        rule("gasolina|combustible|tanqueo|diesel", "Transporte", 2);
+        rule("parqueadero|estacionamiento", "Transporte", 2);
+        rule("peaje|autopista", "Transporte", 2);
+        rule("vuelo|aérea|tiquete avión|avianca|latam|viva air|wingo", "Transporte", 3);
+        rule("pasaje|tiquete transporte|boleto", "Transporte", 1);
+        rule("bicicleta|patineta|scooter|bici", "Transporte", 2);
+        rule("metro|mio bus|megabus", "Transporte", 2);
 
         // ---- SUPERMERCADO Y HOGAR ----
         // Marcas de supermercados muy específicas (3 pts)
@@ -231,7 +231,8 @@ public class ClassifierService {
         // ==============================================================
         // ICONOS
         // ==============================================================
-        CATEGORY_ICONS.put("Restaurantes", "🍽️");
+        CATEGORY_ICONS.put("Alimentación", "🍽️");
+        CATEGORY_ICONS.put("Transporte", "🚕");
         CATEGORY_ICONS.put("Supermercado y Hogar", "🛒");
         CATEGORY_ICONS.put("Entretenimiento y Suscripciones", "🎮");
         CATEGORY_ICONS.put("Educación y Cursos", "📚");
@@ -267,7 +268,7 @@ public class ClassifierService {
         // Scoring map
         Map<String, Integer> scores = new LinkedHashMap<>();
         String[] validCategories = {
-            "Restaurantes", "Supermercado y Hogar",
+            "Alimentación", "Transporte", "Supermercado y Hogar",
             "Entretenimiento y Suscripciones", "Educación y Cursos",
             "Salud y Farmacia", "Misceláneos"
         };
